@@ -10,3 +10,7 @@ def open_pool():
     pool.get_connection()
 
 # Rest of your FastAPI code...
+@api.on_event("shutdown")
+def close_pool():
+    print("close pool connection..")
+    pool.close_connection()

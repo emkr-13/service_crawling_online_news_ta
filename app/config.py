@@ -23,3 +23,47 @@ class SQLite3Connection:
 
     def close_connection(self):
         self.con.close()
+
+    def execute_query(self, query):
+        try:
+            cursor = self.con.cursor()
+            cursor.execute(query)
+            result = cursor.fetchall()
+            cursor.close()
+            return result
+        except sqlite3.Error as e:
+            print(f"Error executing query: {e}")
+            return None
+
+    def insert_query(self, query, data):
+        try:
+            cursor = self.con.cursor()
+            cursor.execute(query, data)
+            self.con.commit()
+            cursor.close()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error inserting data: {e}")
+            return False
+
+    def update_query(self, query, data):
+        try:
+            cursor = self.con.cursor()
+            cursor.execute(query, data)
+            self.con.commit()
+            cursor.close()
+            return True
+        except sqlite3.Error as e:
+            print(f"Error updating data: {e}")
+            return False
+
+    def select_where_query(self, query, data):
+        try:
+            cursor = self.con.cursor()
+            cursor.execute(query, data)
+            result = cursor.fetchall()
+            cursor.close()
+            return result
+        except sqlite3.Error as e:
+            print(f"Error executing select query with WHERE clause: {e}")
+            return None
