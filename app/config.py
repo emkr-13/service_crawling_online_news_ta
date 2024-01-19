@@ -1,4 +1,5 @@
 import sqlite3
+from .logging import logger
 
 class SQLite3Connection:
     __db__: str
@@ -32,7 +33,9 @@ class SQLite3Connection:
             cursor.close()
             return result
         except sqlite3.Error as e:
-            print(f"Error executing query: {e}")
+            logger.error(
+            {"message": f"Error executing query: {e}"}
+            )
             return None
 
     def insert_query(self, query, data):
@@ -43,7 +46,9 @@ class SQLite3Connection:
             cursor.close()
             return True
         except sqlite3.Error as e:
-            print(f"Error inserting data: {e}")
+            logger.error(
+            {"message": f"Error inserting data: {e}"}
+            )
             return False
 
     def update_query(self, query, data):
@@ -54,7 +59,9 @@ class SQLite3Connection:
             cursor.close()
             return True
         except sqlite3.Error as e:
-            print(f"Error updating data: {e}")
+            logger.error(
+            {"message": f"Error updating data: {e}"}
+            )
             return False
 
     def select_where_query(self, query, data):
@@ -65,5 +72,7 @@ class SQLite3Connection:
             cursor.close()
             return result
         except sqlite3.Error as e:
-            print(f"Error executing select query with WHERE clause: {e}")
+            logger.error(
+            {"message": f"Error executing select query with WHERE clause: {e}"}
+            )
             return None
