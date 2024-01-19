@@ -14,20 +14,26 @@ class JSONTrait:
 class ListOnlineNews(JSONTrait):
     id:str
     name:str
+    since_time:dt.date
     progress_time:dt.date
+    until_time:dt.date
     
     def __init__(self, *args):
         (
             self.id,
             self.name,
-            self.progress_time
+            self.since_time,
+            self.progress_time,
+            self.until_time
         ) = args
         
     def __dir__(self):
         return [
             "id",
             "name",
-            "progress_time"
+            "since_time",
+            "progress_time",
+            "until_time"
         ]
     
     def __repr__(self):
@@ -44,13 +50,15 @@ class OnlineNews(JSONTrait):
     news_published_at:dt.datetime
     content:str 
     url:str
+    asal_berita:str
     
     def __init__(self, *args):
         (
             self.title,
             self.news_published_at,
             self.content,
-            self.url
+            self.url,
+            self.asal_berita
         ) = args
     
     def __dir__(self):
@@ -58,7 +66,8 @@ class OnlineNews(JSONTrait):
             "title"
             "news_published_at",
             "content",
-            "url"
+            "url",
+            "asal_beirta"
         ]
         
     def __repr__(self):
