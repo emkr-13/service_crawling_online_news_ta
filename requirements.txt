@@ -1,0 +1,7 @@
+beautifulsoup4==4.12.3
+fastapi==0.109.0
+loguru==0.7.2
+pandas==2.2.0
+python-decouple==3.8
+Requests==2.31.0
+uvicorn==0.26.0
