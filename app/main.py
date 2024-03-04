@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from .config import SQLite3Connection
 from .logging import logger
-from .funcation_query import Function_QUERY
+from .helper import Function_QUERY
 
 api = FastAPI()
 pool = SQLite3Connection()
