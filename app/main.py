@@ -1,29 +1,34 @@
 from fastapi import FastAPI
 from .config import SQLite3Connection
 from .logging import logger
-from .helper import Function_QUERY
+# from .job import JobScheduler
+from .routes import router
+
+import os, signal
 
 api = FastAPI()
-pool = SQLite3Connection()
+# job_scheduler = JobScheduler()
+db = SQLite3Connection()
 
 @api.on_event("startup")
 def open_pool():
     logger.info(f"Opening database connection")
-    pool.get_connection()
-    
-@api.get("/progress_online_news")
-async def get_progress_online_news():
-    return  Function_QUERY.get_progress_online_news()
+    SQLite3Connection().get_connection()
 
-@api.get("/progress_online_news/{news_id}")
-async def get_single_progress_online_news(news_id: int):
-    news_entry = Function_QUERY.get_single_progress_online_news(news_id)
-    if news_entry:
-        return news_entry
-    else:
-        raise HTTPException(status_code=404, detail="News entry not found")
+@api.on_event("startup")
+async def startup():
+    logger.info(f"Start cronjob..")
+    # job_scheduler.start_job_crawler()
 
 @api.on_event("shutdown")
 def close_pool():
     logger.info(f"Close database connection")
-    pool.close_connection()
+    SQLite3Connection().close_connection()
+
+@api.on_event("shutdown")
+async def shutdown():
+    logger.info(f"stop cronjob..")
+    # job_scheduler.shutdown_job_crawler()
+    # os.kill(os.getpid(), signal.SIGKILL)
+    
+api.include_router(router)

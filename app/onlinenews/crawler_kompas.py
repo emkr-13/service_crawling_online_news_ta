@@ -27,15 +27,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                         title_text = title_elem.text.strip()
                     else:
                         title_text = "Title not found"  
-                    # tanggal berita
-                    # date_elem = soup.find('div', {"class": "read__time"})
-                    # if date_elem:
-                    #     date_text = date_elem.text.strip()
-                    #     date_part = date_text.split(' - ')[1].split(',')[0].strip()
-                    #     date_object = datetime.strptime(date_part, '%d/%m/%Y')
-                    #     formatted_date = date_object.strftime('%Y-%m-%d')
-                    # else:
-                    #     date_text = "Date not found"
+                        
                     #     # Content Berita
                     body_elem = soup.find('div', {"class": "read__content"})
                         

@@ -21,7 +21,14 @@ class ListProgressOnlineNews(JSONTrait):
 @dataclass 
 class OnlineNews(JSONTrait):
     title:str
-    news_published_at:dt.datetime
+    news_published_at:str
     content:str 
     url:str
     asal_berita:str
+
+@dataclass 
+class ProgressOnlineNews(JSONTrait):
+    name:str
+    since_time:dt.date
+    progress_time:dt.date
+    until_time:dt.date
