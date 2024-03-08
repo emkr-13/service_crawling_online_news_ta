@@ -26,8 +26,7 @@ def scrape_and_producer_url(url, progress_time,name_news, scraper_func):
                 if data['content'] == 'Content not found' or  data['title'] == 'Content not found':
                     logger.warning({"message": f"Data content or Title not found, {url} when news date {progress_time}"})
                 else:
-                    
-                    Function_QUERY.add_news(url)
+                    Function_QUERY.add_news(data['title'],progress_time,data['content'],url,name_news)
      
             logger.info(f"URl already exists, {url} in database")
     except Exception as e:
@@ -52,7 +51,7 @@ def crawling_onlinenews_day():
                 progrees_time = dt.datetime.strptime(progrees_time_str, "%Y-%m-%d").date()
 
                 if progrees_time <= today and name_news in LIST_ONLINE_NEWS:
-                    futures.append(executor.submit(crawl_and_produce_news, scraper_func, name_news,progrees_time, news_id,since_time,until_time))
+                    futures.append(executor.submit(crawl_and_produce_news, scraper_func, name_news,progrees_time, news_id))
 
             # Wait for all futures to complete
             concurrent.futures.wait(futures)
@@ -62,7 +61,7 @@ def crawling_onlinenews_day():
         
         
 
-def crawl_and_produce_news(scraper_func, name_news, progrees_time, news_id, since_time,until_time):
+def crawl_and_produce_news(scraper_func, name_news, progrees_time, news_id):
     try:
         start_link = dt.datetime.now()
         logger.success({"message": f"Start Scraping {scraper_func.__name__} when news date {progrees_time}"})

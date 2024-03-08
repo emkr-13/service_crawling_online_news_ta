@@ -115,7 +115,7 @@ class Function_QUERY:
     @staticmethod
     def add_news(title,news_published_at,content,url,asal_berita,db_connection=None):
         try:
-            QUERY = 'INSERT INTO online_news (title,news_published_at,content,url,asal_berita) VALUES (?, ?)'
+            QUERY = 'INSERT INTO online_news (title,news_published_at,content,url,asal_berita) VALUES (?,?,?,?,?)'
             data = (title,news_published_at,content,url,asal_berita)
 
             # If db_connection is not provided, create a new SQLite connection
@@ -125,7 +125,7 @@ class Function_QUERY:
             else:
                 result = db_connection.insert_query(QUERY, data)
 
-            logger.info(f"add news with ID: {result}")
+            logger.success(f"add news with ID: {result} and with {url}")
             return result
         except Exception as e:
             logger.error(f"Error add news: {str(e)}")

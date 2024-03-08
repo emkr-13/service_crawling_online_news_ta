@@ -18,7 +18,7 @@ def open_pool():
 @api.on_event("startup")
 async def startup():
     logger.info(f"Start cronjob..")
-    # job_scheduler.start_job_crawler()
+    job_scheduler.start_job_crawler()
 
 @api.on_event("shutdown")
 def close_pool():
