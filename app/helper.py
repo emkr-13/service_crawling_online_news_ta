@@ -7,7 +7,7 @@ class Function_QUERY:
     @staticmethod
     def get_progress_online_news(db_connection=None):
         try:
-                QUERY = "SELECT id,name,since_time,progress_time,until_time FROM progress_online_news"
+                QUERY = "SELECT id,name,since_time,progress_time,until_time FROM progress_online_news WHERE progress_time <= until_time"
                 logger.info(f"Executing query: {QUERY}")
 
                 # If db_connection is not provided, create a new SQLite connection
@@ -81,6 +81,33 @@ class Function_QUERY:
                 return None
         except Exception as e:
             logger.error(f"Error in get_single_progress_online_news: {str(e)}")
+            raise
+    ## Get 
+    @staticmethod
+    def get_count_news(url, db_connection=None):
+        try:
+            QUERY = "SELECT COUNT(*) FROM online_news WHERE url=?"
+            data = url,
+            logger.info(f"Executing query: {QUERY}")
+            
+            # Check if db_connection is None before using it as a context manager
+            if db_connection is None:
+                # Create a new connection or handle the case when db_connection is None
+                with SQLite3Connection() as db_connection:
+                    data = db_connection.select_where_query(QUERY, data)
+            else:
+                # Use the existing connection
+                data = db_connection.select_where_query(QUERY, data)
+                
+            if data:
+                result = data[0][0]
+                logger.info(f"Retrieved data: {result}")
+                return result
+            else:
+                logger.info(f"No data found for ID: {url}")
+                return None
+        except Exception as e:
+            logger.error(f"Error in get_count_online_news: {str(e)}")
             raise
     
     ## Tabel Online News 

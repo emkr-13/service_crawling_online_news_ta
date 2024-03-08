@@ -1,46 +1,48 @@
 import threading
 import schedule
-import asyncio
+import time
 from decouple import config
 from .logging import logger
+from .scraper import crawling_onlinenews_day
 
+class JobScheduler:
+    TASK_CRAWLING_STOP_FLAG: threading.Event = threading.Event()
+    TASK_CRAWLING_CRON_THREAD: threading.Thread = None
 
-TASK_CRAWLING_STOP_FLAG: threading.Event = threading.Event()
-TASK_CRAWLING_CRON_THREAD: threading.Thread = None
+    @staticmethod
+    def start_job_crawler():
+        schedule_time = int(config('TIME_INTERVAL'))
 
+        logger.info({
+            "message": "Starting crawler.."
+        })
 
-def start_job_crawler():
-    global TASK_CRAWLING_CRON_THREAD, TASK_CRAWLING_STOP_FLAG
-    schedule_time=int(config('TIME_INTERVAL'))
+        schedule.every(schedule_time).seconds.do(lambda: JobScheduler.run_crawling())
 
-    logger.info({
-                "message":f"starting crawler.."
-    })
-    
-    # schedule.every(schedule_time).seconds.do(lambda: asyncio.run(crawling_onlinenews_day_async()))
+        def run():
+            while True:
+                schedule.run_pending()
+                if JobScheduler.TASK_CRAWLING_STOP_FLAG.is_set():
+                    if JobScheduler.TASK_CRAWLING_STOP_FLAG.is_set():
+                        break
+                    time.sleep(1)
 
-    def run():
-        while True:
-            schedule.run_pending()
-            if TASK_CRAWLING_STOP_FLAG.is_set():
-                if TASK_CRAWLING_STOP_FLAG.is_set():
-                    break
-                asyncio.sleep(1)
+        JobScheduler.TASK_CRAWLING_CRON_THREAD = threading.Thread(target=run)
+        JobScheduler.TASK_CRAWLING_CRON_THREAD.start()
 
-    TASK_CRAWLING_CRON_THREAD = threading.Thread(target=run)
-    TASK_CRAWLING_CRON_THREAD.start()
+    @staticmethod
+    def run_crawling():
+        crawling_onlinenews_day()
 
+    @staticmethod
+    def shutdown_job_crawler():
+        logger.info({
+            "message": "Shutdown crawler.."
+        })
 
-def shutdown_job_crawler():
-    global TASK_CRAWLING_CRON_THREAD, TASK_CRAWLING_STOP_FLAG
-    
-    logger.info({
-                "message":f"shutdown crawler.."
-    })
-    
-    TASK_CRAWLING_STOP_FLAG.set()
-    schedule.clear()
+        JobScheduler.TASK_CRAWLING_STOP_FLAG.set()
+        schedule.clear()
 
-    if TASK_CRAWLING_CRON_THREAD is not None:
-        TASK_CRAWLING_CRON_THREAD.join(1)
-        TASK_CRAWLING_CRON_THREAD = None 
+        if JobScheduler.TASK_CRAWLING_CRON_THREAD is not None:
+            JobScheduler.TASK_CRAWLING_CRON_THREAD.join(1)
+            JobScheduler.TASK_CRAWLING_CRON_THREAD = None

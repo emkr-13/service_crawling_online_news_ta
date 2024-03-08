@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from .config import SQLite3Connection
 from .logging import logger
-# from .job import JobScheduler
+from .job import JobScheduler
 from .routes import router
 
 import os, signal
 
 api = FastAPI()
-# job_scheduler = JobScheduler()
+job_scheduler = JobScheduler()
 db = SQLite3Connection()
 
 @api.on_event("startup")
@@ -28,7 +28,7 @@ def close_pool():
 @api.on_event("shutdown")
 async def shutdown():
     logger.info(f"stop cronjob..")
-    # job_scheduler.shutdown_job_crawler()
-    # os.kill(os.getpid(), signal.SIGKILL)
+    job_scheduler.shutdown_job_crawler()
+    os.kill(os.getpid(), signal.SIGKILL)
     
 api.include_router(router)

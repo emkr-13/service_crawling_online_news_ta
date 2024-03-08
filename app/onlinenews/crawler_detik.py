@@ -24,23 +24,6 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                     # Title Element
                     title_elem = soup.find('h1', {"class": "detail__title"})
                     title_text = title_elem.text.strip() if title_elem else "Title not found"
-                    # date Element
-                    # nama_bulan = {
-                    #     'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
-                    #     'Mei': '05', 'Jun': '06', 'Jul': '07', 'Ags': '08',
-                    #     'Sep': '09', 'Okt': '10', 'Nov': '11', 'Des': '12'
-                    # }
-                    # date_elem = soup.find('div', {"class": "detail__date"})
-                    # date_text = date_elem.text.strip() if date_elem else "Date not found"
-                    
-                    # # Pisahkan tanggal menjadi komponen yang sesuai
-                    # parts = date_text.split()
-                    # hari = parts[1]
-                    # bulan = nama_bulan[parts[2]]
-                    # tahun = parts[3]
-                    # waktu = parts[4]
-
-                    # tanggal_dikonversi = f"{tahun}-{bulan}-{hari}"
                     # body element 
                     body_elem = soup.find('div', {"class": "detail__body"})
                     if body_elem:
@@ -77,3 +60,46 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                 })
                 time.sleep(10)  
     return None 
+
+def scrape_links_news(date,page_number):
+    formatted_date = date.strftime("%Y-%m-%d")
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
+    }
+    url = f"https://news.detik.com/indeks/{page_number}?date={formatted_date}"
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    articles = soup.find_all('article')
+
+    links = []
+    for article in articles:
+        link = article.find('a')['href']
+        links.append(link)
+
+    logger.success({
+        "message": f"Scraped {len(links)} links from page {page_number} when {date} from detik.com"
+        })
+    
+    return links
+
+# multi threead
+def scrape_link_per_day(date,max_threads=int(config('MAX_THREAD_POOL'))):
+    page_number = 0
+    page_links = []
+
+    with ThreadPoolExecutor(max_workers=max_threads) as executor:
+        futures = []
+
+        while True:
+            future = executor.submit(scrape_links_news, date,page_number)
+            futures.append(future)
+            page_number += 1
+
+            # Break the loop if no more articles are found
+            if not future.result():
+                break
+
+        for future in concurrent.futures.as_completed(futures):
+            page_links.extend(future.result())
+
+    return page_links
