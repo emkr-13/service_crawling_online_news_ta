@@ -76,7 +76,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
 
 # scrap url per day 
 def scrape_links_news(date,page_number):
-    formatted_date = date.strftime("%Y-%m-%d")
+    formatted_date = date.strftime("%Y/%m/%d")
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
     }
@@ -94,7 +94,7 @@ def scrape_links_news(date,page_number):
         logger.error(f"Div 'flex flex-col gap-5' not found on page {page_number}")
 
     logger.success({
-        "message": f"Scraped {len(links)} links from page {page_number} when {date} from detik.com"
+        "message": f"Scraped {len(links)} links from page {page_number} when {date} from www.cnnindonesia.com"
         })
     
     return links

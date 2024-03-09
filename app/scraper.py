@@ -17,7 +17,7 @@ NEWS_CRAWLERS = {
 LIST_ONLINE_NEWS = ['Detik News', 'CNN News', 'Kompas News']
 
 # Testing Berita
-# LIST_ONLINE_NEWS = ['Detik News']
+# LIST_ONLINE_NEWS = ['CNN News']
 
 def scrape_and_produce_url(url, progress_time, name_news, scraper_func):
     try:
@@ -27,7 +27,8 @@ def scrape_and_produce_url(url, progress_time, name_news, scraper_func):
             if data and data.get('content') and data.get('title'):
                 Function_QUERY.add_news(data['title'], progress_time, data['content'], url, name_news)
             else:
-                logger.warning({"message": f"Data content or Title not found at {url} when news date {progress_time}"})
+                # Log a warning if either title or content is not found
+                logger.warning({"message": f"Title or Content not found at {url} when news date {progress_time}"})
         else:
             logger.info(f"URL already exists in the database: {url}")
     except Exception as e:
