@@ -55,7 +55,7 @@ class Function_QUERY:
                     result = db_connection.update_query(QUERY, data)
             else:
                 result = db_connection.update_query(QUERY, data)
-            logger.info(f"Updated progress_time for progress_online_news entry with ID: {id}")
+            logger.info(f"Updated progress_time for progress_online_news entry with ID: {id} and time update to {progress_time}")
             return result
         except Exception as e:
             logger.error(f"Error in update_time_progress_time: {str(e)}")
