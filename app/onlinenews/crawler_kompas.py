@@ -91,7 +91,7 @@ def scrape_links(date,page_number,max_retries=int(config('MAX_RETRIES'))):
             response = requests.get(url, headers=headers)
             if response.status_code == 200:
                 soup = BeautifulSoup(response.text, 'html.parser')
-                articles = soup.find_all('h3', {"class": "article__title article__title--medium"})
+                articles = soup.find_all('div', {"class": "articleItem"})
                 links = []
                 for article in articles:
                     link = article.find('a')['href']

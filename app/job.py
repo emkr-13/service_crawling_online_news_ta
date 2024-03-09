@@ -3,7 +3,7 @@ import schedule
 import time
 from decouple import config
 from .logging import logger
-from .scraper import crawling_onlinenews_day
+from .scraper import crawling_online_news_day
 
 class JobScheduler:
     TASK_CRAWLING_STOP_FLAG: threading.Event = threading.Event()
@@ -32,7 +32,7 @@ class JobScheduler:
 
     @staticmethod
     def run_crawling():
-        crawling_onlinenews_day()
+        crawling_online_news_day()
 
     @staticmethod
     def shutdown_job_crawler():
