@@ -26,7 +26,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                     if title_elem:
                         title_text = title_elem.text.strip()
                     else:
-                        title_text = "Title not found"  
+                        title_text = ""  
                         
                     #     # Content Berita
                     body_elem = soup.find('div', {"class": "read__content"})
@@ -42,9 +42,9 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                             content_text = content_text.replace('\n', '').replace('\r', '').replace('\t', '')
                             content_text = ' '.join(content_text.split())
                         else:
-                            content_text="Content not found"
+                            content_text=""
                     else:
-                            content_text="Content not found"
+                            content_text=""
 
                     return{
                         'title': title_text,

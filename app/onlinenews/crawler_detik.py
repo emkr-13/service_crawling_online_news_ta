@@ -23,7 +23,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
 
                     # Title Element
                     title_elem = soup.find('h1', {"class": "detail__title"})
-                    title_text = title_elem.text.strip() if title_elem else "Title not found"
+                    title_text = title_elem.text.strip() if title_elem else ""
                     # body element 
                     body_elem = soup.find('div', {"class": "detail__body"})
                     if body_elem:
@@ -34,7 +34,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                         content_text = content_text.replace("ADVERTISEMENT SCROLL TO CONTINUE WITH CONTENT", "")
                         content_text= content_text.replace("ADVERTISEMENTSCROLL TO CONTINUE WITH CONTENT","")
                     else:
-                        content_text = "Content not found"
+                        content_text = ""
 
                     return {
                         'title': title_text,

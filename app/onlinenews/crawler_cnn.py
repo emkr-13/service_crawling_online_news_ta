@@ -24,7 +24,7 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                     if title_elem:
                         title_text = title_elem.text.strip()
                     else:
-                        title_text = "Title not found"     
+                        title_text = ""     
                     #     # Content Berita
                     body_elem = soup.find('div', {"class": "detail-text text-cnn_black text-sm grow min-w-0"})
                     
@@ -41,9 +41,9 @@ def scrape_url(url,max_retries=int(config('MAX_RETRIES'))):
                             content_text = content_text.replace("ADVERTISEMENT SCROLL TO CONTINUE WITH CONTENT", "")
                             content_text = content_text.replace("ADVERTISEMENTSCROLL TO CONTINUE WITH CONTENT","")
                         else:
-                            content_text ="Content not found"
+                            content_text =""
                     else:
-                        content_text ="Content not found"
+                        content_text =""
                     return {
                         'title': title_text,
                         'content': content_text,
